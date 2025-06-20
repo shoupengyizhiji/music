@@ -3,7 +3,7 @@
     <div class="block text-center">
       <el-carousel class="butten_block">
         <el-carousel-item v-for="item in bannerList" :key="item.bannerId">
-          <img :src="item.pic" alt="" class="aspect-video w-full" />
+          <img v-lazy="item.pic" alt="" class="aspect-video w-full" />
         </el-carousel-item>
       </el-carousel>
     </div>
@@ -58,9 +58,8 @@ const getPage = async () => {
 const getHot = async () => {
   const { hot } = await getHotService()
   hotTicData.value = hot
-  console.log(hotTicData.value)
+  // console.log(hotTicData.value)
 }
-
 onMounted(() => {
   getBannerList()
   getPage()

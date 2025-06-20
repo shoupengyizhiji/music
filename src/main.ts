@@ -6,9 +6,10 @@ import router from './router'
 import '@/styles/commnt.scss'
 import '@/styles/tailwind.css'
 // import { Swipe, SwipeItem } from 'vant'
-
+import VueLazyload from 'vue-lazyload'
 const app = createApp(App)
 
+app.use(VueLazyload)
 app.use(createPinia())
 
 app.use(router)

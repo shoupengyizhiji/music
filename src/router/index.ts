@@ -28,6 +28,7 @@ const router = createRouter({
     },
     {
       path: '/music',
+      name: 'music',
       component: import('@/views/Music/index.vue'),
     },
     {

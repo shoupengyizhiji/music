@@ -9,65 +9,124 @@
         <div><i class="iconfont icon-sandian"></i></div>
       </div>
     </div>
-    <div class="flex bg-white mt-0.5 rounded-md max-w-screen">
-      <div class="p-3">
-        <div class="flex">
-          <div class="h-30 w-30">
-            <img class="rounded-md aspect-square" src="@/assets/imgs/log.jpg" alt="" />
-          </div>
-          <div class="m-1.5">
-            <div><p class="truncate">野树与野生生详乐队202500000</p></div>
-            <div>
-              <img src="@/assets/imgs/log.jpg" class="h-7 w-7 rounded-full aspect-square" alt="" />
+
+    <div class="flex-1 overflow-y-auto">
+      <div class="flex bg-white mt-0.5 rounded-md max-w-screen">
+        <div class="p-3">
+          <div class="flex">
+            <div class="h-30 w-30">
+              <img class="rounded-md aspect-square" v-lazy="detailList?.coverImgUrl" alt="" />
             </div>
-          </div>
-        </div>
-        <div class="my-3 flex justify-around">
-          <el-button color="red" round class="min-w-25">
-            <div><i class="iconfont icon-zhuanfa1"></i></div>
-            <div class="pl-1"><p>26</p></div>
-          </el-button>
-          <el-button color="red" round class="min-w-25">
-            <div><i class="iconfont icon-xiaoxi" @click="pushComment"></i></div>
-            <div class="pl-1"><p>26</p></div>
-          </el-button>
-          <el-button color="red" round class="min-w-25">
-            <div><i class="iconfont icon-jiahaozhankai"></i></div>
-            <div class="pl-1"><p>26</p></div></el-button
-          >
-        </div>
-      </div>
-    </div>
-    <div class="flex flex-col bg-white h-full mt-3 rounded-md">
-      <div class="mx-3 pt-3">
-        <i class="iconfont icon-bofang text-red-500"></i>
-        <span class="pl-3">播放全部 (191)</span>
-      </div>
-      <div v-for="item in 5" :key="item" class="border-b border-gray-100">
-        <div class="flex justify-between py-3 mx-3">
-          <div>
-            <div class="flex items-center">
-              <div>1</div>
-              <div class="pl-2">
-                <div>把回忆拼好给你</div>
-                <div class="text-xs text-gray-400">陈奕迅</div>
+            <div class="m-1.5 overflow-hidden text-center">
+              <div class="overflow-hidden">
+                <p class="truncate">{{ detailList?.name }}</p>
+              </div>
+              <div class="flex justify-items-center">
+                <div>
+                  <img
+                    v-lazy="detailList?.creator?.avatarUrl"
+                    class="h-7 w-7 rounded-full aspect-square"
+                  />
+                </div>
+                <div class="ml-2 truncate">
+                  <span>{{ detailList?.creator?.nickname }}</span>
+                </div>
               </div>
             </div>
           </div>
-          <div><i class="iconfont icon-sandian"></i></div>
+          <div class="my-3 flex justify-around">
+            <el-button color="red" round class="min-w-25">
+              <div><i class="iconfont icon-zhuanfa1"></i></div>
+              <div class="pl-1">
+                <p>{{ dynamicList?.shareCount }}</p>
+              </div>
+            </el-button>
+            <el-button color="red" round class="min-w-25">
+              <div><i class="iconfont icon-xiaoxi" @click="pushComment"></i></div>
+              <div class="pl-1">
+                <p>{{ dynamicList?.commentCount }}</p>
+              </div>
+            </el-button>
+            <el-button color="red" round class="min-w-25">
+              <div><i class="iconfont icon-jiahaozhankai"></i></div>
+              <div class="pl-1">
+                <p>{{ dynamicList?.bookedCount }}</p>
+              </div></el-button
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col bg-white mt-3 rounded-md">
+        <div class="mx-3 pt-3">
+          <i class="iconfont icon-bofang text-red-500"></i>
+          <span class="pl-3">播放全部 ({{ songList.length }})</span>
+        </div>
+        <div v-for="(item, index) in songList" :key="item.id" class="border-b border-gray-100">
+          <div class="flex justify-between py-3 mx-3">
+            <div>
+              <div class="flex items-center">
+                <div>{{ index + 1 }}</div>
+                <div class="pl-2">
+                  <div>{{ item.name }}</div>
+                  <div class="text-xs text-gray-400">{{ item.ar?.[0].name }}</div>
+                </div>
+              </div>
+            </div>
+            <div><i class="iconfont icon-sandian"></i></div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
+import {
+  getSongsService,
+  getDynamicService,
+  DynamicItem,
+  getDetailService,
+  PlayListItem,
+} from '@/apis/song'
+import { ref } from 'vue'
+import type { SongItem } from '@/types/apis/song'
+// import { getMusicDetailService } from '@/apis/music'
 
 const router = useRouter()
+const route = useRoute()
+const songList = ref<SongItem[]>([])
+const dynamicList = ref<DynamicItem>()
+const detailList = ref<PlayListItem>({})
+
 const pushFind = () => {
   router.push('/find')
 }
 const pushComment = () => {
   router.push('/comment')
 }
+
+const getPlayList = async () => {
+  const id: number = Number(route.query.id)
+  const { code, songs } = await getSongsService(id)
+  if (code === 200) {
+    songList.value = songs
+  }
+}
+
+const getDynamic = async () => {
+  const id: number = Number(route.query.id)
+  const res = await getDynamicService(id)
+  dynamicList.value = res
+}
+const getDetail = async () => {
+  const id: number = Number(route.query.id)
+  const { code, playlist } = await getDetailService(id)
+  if (code === 200) {
+    detailList.value = playlist
+  }
+}
+getPlayList()
+getDynamic()
+getDetail()
 </script>

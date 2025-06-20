@@ -1,22 +1,19 @@
 <template>
   <div class="flex">
-    <div class="flex-1 flex flex-col justify-center items-center">
-      <div><i class="iconfont icon-faxian leading-none" style="font-size: 23px"></i></div>
-      <div class="leading-none text-xs active_font">发现</div>
-    </div>
-    <div class="flex-1 flex flex-col justify-center items-center" data-id="2">
-      <div><i class="iconfont icon-yinle1 leading-none" style="font-size: 20px"></i></div>
-      <div class="leading-none text-xs">推荐</div>
-    </div>
-    <div class="flex-1 flex flex-col justify-center items-center">
-      <div class="rounded-full active_bg">
-        <i class="iconfont icon-a-xiaoxibiji leading-none" style="font-size: 20px"></i>
+    <div
+      class="flex-1 flex flex-col justify-center items-center"
+      v-for="(item, index) in icons"
+      :key="index"
+      @click="isActive = index"
+    >
+      <div>
+        <i
+          class="iconfont leading-none"
+          :class="`${item.icon} ${isActive == index ? 'active_font' : ''}`"
+          style="font-size: 23px"
+        ></i>
       </div>
-      <div class="leading-none text-xs active_font">笔记</div>
-    </div>
-    <div class="flex-1 flex flex-col justify-center items-center" @click="pushMy">
-      <div><i class="iconfont icon-wode leading-none" style="font-size: 20px"></i></div>
-      <div class="leading-none text-xs">我的</div>
+      <div class="leading-none text-xs">{{ item.name }}</div>
     </div>
   </div>
 </template>
@@ -24,6 +21,13 @@
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 
+const isActive = ref(0)
+const icons = [
+  { name: '发现', icon: 'icon-faxian' },
+  { name: '推荐', icon: 'icon-yinle1' },
+  { name: '笔记', icon: 'icon-a-xiaoxibiji' },
+  { name: '我的', icon: 'icon-wode' },
+]
 const router = useRouter()
 const pushMy = () => {
   router.push('/my')

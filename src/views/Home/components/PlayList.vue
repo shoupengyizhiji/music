@@ -10,7 +10,7 @@
           class="flex flex-col"
           v-for="item in prop.playList?.creatives"
           :key="item.creativeId"
-          @click="router.push('/music')"
+          @click="pushMusic(item.creativeId)"
         >
           <div class="mr-2 w-30 h-30 shrink-0 scroll-auto flex flex-col justify-between">
             <!-- <img src="/src/assets/" alt="">/ -->
@@ -34,4 +34,14 @@ const prop = defineProps({
     default: null,
   },
 })
+const pushMusic = function pushMusic(id: number) {
+  console.log(id)
+  router.push({
+    name: 'music',
+    query: {
+      id: id,
+    },
+  })
+  console.log(id)
+}
 </script>
