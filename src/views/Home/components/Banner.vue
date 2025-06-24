@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
   <div class="block text-center">
     <el-carousel class="butten_block">
       <el-carousel-item v-for="item in props.bannerList" :key="item.bannerId">
@@ -10,8 +10,8 @@
 <script lang="ts" setup>
 const props = defineProps({
   bannerList: {
-    type: Array,
-    default: () => [],
+    type: Object,
+    default: null,
   },
 })
-</script> -->
+</script>

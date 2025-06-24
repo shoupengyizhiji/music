@@ -1,12 +1,6 @@
 <template>
   <div class="px-2">
-    <div class="block text-center">
-      <el-carousel class="butten_block">
-        <el-carousel-item v-for="item in bannerList" :key="item.bannerId">
-          <img v-lazy="item.pic" alt="" class="aspect-video w-full" />
-        </el-carousel-item>
-      </el-carousel>
-    </div>
+    <Banner :bannerList="bannerList"></Banner>
     <PlayList :playList="playListitem || {}"></PlayList>
     <!-- {{ hotTicData }} -->
     <HotTic :hotTicData="hotTicData || []"></HotTic>
@@ -18,6 +12,7 @@ import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { getBannerService, getPageService, getHotService } from '@/apis/find'
 import PlayList from './PlayList.vue'
+import Banner from './Banner.vue'
 import type { HomepageBlock, HotTopic } from '@/types/apis'
 import HotTic from './HotTic.vue'
 
@@ -29,7 +24,7 @@ const playListitem = ref<HomepageBlock | null>()
 //雷达歌单数据
 const radarListitem = ref<HomepageBlock | null>()
 //热门话题数据
-const hotTicData = ref<HotTopic[] | null>()
+const hotTicData = ref<HomepageBlock | null>()
 
 const getBannerList = async () => {
   const { banners } = await getBannerService(2)
@@ -51,19 +46,18 @@ const getPage = async () => {
       case 'HOMEPAGE_BLOCK_MGC_PLAYLIST':
         radarListitem.value = item
         break
+      //热门话题
+      case 'HOMEPAGE_BLOCK_HOT_TOPIC':
+        hotTicData.value = item
+        break
     }
   })
 }
 //获取热门话题
-const getHot = async () => {
-  const { hot } = await getHotService()
-  hotTicData.value = hot
-  // console.log(hotTicData.value)
-}
+
 onMounted(() => {
   getBannerList()
   getPage()
-  getHot()
 })
 </script>
 <style lang="scss">

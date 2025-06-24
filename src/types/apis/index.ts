@@ -39,11 +39,17 @@ export interface UiElement {
   mainTitle: {
     canShowTitleLogo: boolean
     title: string
+    titleImgUrl: string
+  }
+  subTitle: {
+    canShowTitleLogo: false
+    title: string
   }
 }
 
 export interface CreativesItem {
   creativeID: string
+  creativeType: string
   resources: ResourceItem[]
   uiElement?: UiElement[]
 }
@@ -57,6 +63,7 @@ export interface HomepageBlock {
     | 'HOMEPAGE_BLOCK_MGC_PLAYLIST'
     | 'HOMEPAGE_BLOCK_LISTEN_LIVE'
     | 'HOMEPAGE_BLOCK_NEW_ALBUM_NEW_SONG'
+    | 'HOMEPAGE_BLOCK_HOT_TOPIC'
   blockDemote: boolean
   blockStyle: number
   canClose: boolean

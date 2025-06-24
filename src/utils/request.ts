@@ -25,7 +25,7 @@ requestInstance.interceptors.request.use(
       config.params = {
         ...(config.params || {}),
         ...defaultData,
-      }         
+      }
     }
     return config
   },

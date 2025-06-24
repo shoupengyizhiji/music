@@ -33,7 +33,12 @@ const router = createRouter({
     },
     {
       path: '/comment',
+      name: 'comment',
       component: import('@/views/Comment/index.vue'),
+    },
+    {
+      path: '/songlist',
+      component: import('@/views/SongList/SongDwer.vue'),
     },
   ],
   scrollBehavior() {

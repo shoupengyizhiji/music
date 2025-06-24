@@ -12,12 +12,12 @@
 
     <div class="flex-1 overflow-y-auto">
       <div class="flex bg-white mt-0.5 rounded-md max-w-screen">
-        <div class="p-3">
+        <div class="p-3 w-full">
           <div class="flex">
             <div class="h-30 w-30">
               <img class="rounded-md aspect-square" v-lazy="detailList?.coverImgUrl" alt="" />
             </div>
-            <div class="m-1.5 overflow-hidden text-center">
+            <div class="m-1.5 overflow-hidden text-center w-full">
               <div class="overflow-hidden">
                 <p class="truncate">{{ detailList?.name }}</p>
               </div>
@@ -38,19 +38,37 @@
             <el-button color="red" round class="min-w-25">
               <div><i class="iconfont icon-zhuanfa1"></i></div>
               <div class="pl-1">
-                <p>{{ dynamicList?.shareCount }}</p>
+                <p>
+                  {{
+                    (dynamicList?.shareCount || 0) > 10000
+                      ? ((dynamicList?.shareCount || 0) / 10000).toFixed(2) + '万'
+                      : dynamicList?.shareCount
+                  }}
+                </p>
               </div>
             </el-button>
-            <el-button color="red" round class="min-w-25">
-              <div><i class="iconfont icon-xiaoxi" @click="pushComment"></i></div>
+            <el-button color="red" round class="min-w-25" @click="pushComment">
+              <div><i class="iconfont icon-xiaoxi"></i></div>
               <div class="pl-1">
-                <p>{{ dynamicList?.commentCount }}</p>
+                <p>
+                  {{
+                    (dynamicList?.commentCount || 0) > 10000
+                      ? ((dynamicList?.commentCount || 0) / 10000).toFixed(2) + '万'
+                      : dynamicList?.commentCount
+                  }}
+                </p>
               </div>
             </el-button>
             <el-button color="red" round class="min-w-25">
               <div><i class="iconfont icon-jiahaozhankai"></i></div>
               <div class="pl-1">
-                <p>{{ dynamicList?.bookedCount }}</p>
+                <p>
+                  {{
+                    (dynamicList?.bookedCount || 0) > 10000
+                      ? ((dynamicList?.bookedCount || 0) / 10000).toFixed(2) + '万'
+                      : dynamicList?.bookedCount
+                  }}
+                </p>
               </div></el-button
             >
           </div>
@@ -63,6 +81,7 @@
           <span class="pl-3">播放全部 ({{ songList.length }})</span>
         </div>
         <div v-for="(item, index) in songList" :key="item.id" class="border-b border-gray-100">
+          <!-- @click="radioMusic(item.id)" -->
           <div class="flex justify-between py-3 mx-3">
             <div>
               <div class="flex items-center">
@@ -103,7 +122,12 @@ const pushFind = () => {
   router.push('/find')
 }
 const pushComment = () => {
-  router.push('/comment')
+  router.push({
+    name: 'comment',
+    query: {
+      id: route.query.id,
+    },
+  })
 }
 
 const getPlayList = async () => {
@@ -117,7 +141,9 @@ const getPlayList = async () => {
 const getDynamic = async () => {
   const id: number = Number(route.query.id)
   const res = await getDynamicService(id)
-  dynamicList.value = res
+  if (res.code === 200) {
+    dynamicList.value = res
+  }
 }
 const getDetail = async () => {
   const id: number = Number(route.query.id)

@@ -14,9 +14,6 @@ interface HomeResponse extends HttpResponse {
     blocks: HomepageBlock[]
   }
 }
-interface HotResponse extends HttpResponse {
-  hot: HotTopic[]
-}
 
 //获取轮播图数据
 export const getBannerService = (type?: 0 | 1 | 2 | 3): Promise<BannerResponse> => {
@@ -39,9 +36,3 @@ export const getPageService = (refresh: boolean = false): Promise<HomeResponse> 
   })
 }
 //获取热门话题数据
-export const getHotService = (): Promise<HotResponse> => {
-  return request({
-    url: '/hot/topic',
-    method: 'get',
-  })
-}

@@ -15,7 +15,11 @@ declare module 'vue' {
     ElDrawer: typeof import('element-plus/es')['ElDrawer']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SongDwer: typeof import('./src/components/SongDwer.vue')['default']
     VanSwipe: typeof import('vant/es')['Swipe']
     VanSwipeItem: typeof import('vant/es')['SwipeItem']
+  }
+  export interface ComponentCustomProperties {
+    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }

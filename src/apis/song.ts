@@ -30,7 +30,7 @@ export const getSongsService = (id: number): Promise<SongResponse> => {
     },
   })
 }
-//获取转发、评论、收场
+//获取转发、评论、收藏
 export const getDynamicService = (id: number): Promise<DynamicItem> => {
   return request({
     url: '/playlist/detail/dynamic',

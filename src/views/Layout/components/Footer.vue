@@ -9,16 +9,18 @@
       <div>
         <i
           class="iconfont leading-none"
-          :class="`${item.icon} ${isActive == index ? 'active_font' : ''}`"
+          :class="{ [icons?.[index].icon]: true, active_font: isActive == index }"
           style="font-size: 23px"
         ></i>
       </div>
-      <div class="leading-none text-xs">{{ item.name }}</div>
+      <div class="leading-none text-xs" :class="{ active_font: isActive == index }">
+        {{ item.name }}
+      </div>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-import { useRouter } from 'vue-router'
+import { useRouter,useRoute} from 'vue-router'  
 import { ref } from 'vue'
 
 const isActive = ref(0)
@@ -29,10 +31,13 @@ const icons = [
   { name: '我的', icon: 'icon-wode' },
 ]
 const router = useRouter()
+
 const pushMy = () => {
   router.push('/my')
 }
 const selectId = ref(0)
+
+
 // const pushFind = (a, e) => {
 //   console.log(e)
 //   router.push('/find')
