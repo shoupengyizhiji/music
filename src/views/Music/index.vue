@@ -104,10 +104,11 @@ import { useRouter, useRoute } from 'vue-router'
 import {
   getSongsService,
   getDynamicService,
-  DynamicItem,
   getDetailService,
-  PlayListItem,
+  getMusicLyricService,
+  getCheckMusicService,
 } from '@/apis/song'
+import type { DynamicItem, PlayListItem } from '@/apis/song'
 import { ref } from 'vue'
 import type { SongItem } from '@/types/apis/song'
 // import { getMusicDetailService } from '@/apis/music'
@@ -152,7 +153,19 @@ const getDetail = async () => {
     detailList.value = playlist
   }
 }
+async function getMusicUrl() {
+  await getCheckMusicService()
+  if (true) {
+    getMusicLyricService(100)
+  } else {
+  }
+}
+async function getCheckMusicService() {
+  await getMusicLyricService(100)
+}
+
 getPlayList()
 getDynamic()
 getDetail()
+getMusicUrl()
 </script>

@@ -17,7 +17,7 @@ export interface DynamicItem {
   subscribed: boolean
 }
 
-interface PlayListDetail extends HttpResponse {
+export interface PlayListDetail extends HttpResponse {
   playlist: PlayListItem
 }
 //获取相关歌曲
@@ -47,6 +47,28 @@ export const getDetailService = (id: number): Promise<PlayListDetail> => {
     method: 'get',
     params: {
       id,
+    },
+  })
+}
+//获取音乐url
+export function getMusicLyricService(id: number, br: number = 999000) {
+  return request({
+    url: '/song/url',
+    method: 'get',
+    params: {
+      id,
+      br,
+    },
+  })
+}
+//判断歌曲是否可用
+export function getCheckMusicService(id: number, br: number = 999000) {
+  return request({
+    url: '/check/music',
+    method: 'get',
+    params: {
+      id,
+      br,
     },
   })
 }
