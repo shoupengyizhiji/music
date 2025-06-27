@@ -34,3 +34,11 @@ export interface PlayListItem {
   }
   name: string
 }
+//url类型
+export interface MusicUrlItem {
+  br: number
+  encodeType: string
+  id: number
+  musicId: number
+  url: string
+}

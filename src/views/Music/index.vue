@@ -80,7 +80,12 @@
           <i class="iconfont icon-bofang text-red-500"></i>
           <span class="pl-3">播放全部 ({{ songList.length }})</span>
         </div>
-        <div v-for="(item, index) in songList" :key="item.id" class="border-b border-gray-100">
+        <div
+          v-for="(item, index) in songList"
+          :key="item.id"
+          class="border-b border-gray-100"
+          @click="radioMusic(item.id)"
+        >
           <!-- @click="radioMusic(item.id)" -->
           <div class="flex justify-between py-3 mx-3">
             <div>
@@ -89,6 +94,7 @@
                 <div class="pl-2">
                   <div>{{ item.name }}</div>
                   <div class="text-xs text-gray-400">{{ item.ar?.[0].name }}</div>
+                  <audio v-if="urlList" controls :src="urlList"></audio>
                 </div>
               </div>
             </div>
@@ -105,19 +111,21 @@ import {
   getSongsService,
   getDynamicService,
   getDetailService,
-  getMusicLyricService,
+  getMusicUrlService,
   getCheckMusicService,
 } from '@/apis/song'
 import type { DynamicItem, PlayListItem } from '@/apis/song'
 import { ref } from 'vue'
-import type { SongItem } from '@/types/apis/song'
+import type { SongItem, MusicUrlItem } from '@/types/apis/song'
 // import { getMusicDetailService } from '@/apis/music'
+import { ElMessage } from 'element-plus'
 
 const router = useRouter()
 const route = useRoute()
 const songList = ref<SongItem[]>([])
 const dynamicList = ref<DynamicItem>()
 const detailList = ref<PlayListItem>({})
+const urlList = ref<string>('')
 
 const pushFind = () => {
   router.push('/find')
@@ -153,19 +161,26 @@ const getDetail = async () => {
     detailList.value = playlist
   }
 }
-async function getMusicUrl() {
-  await getCheckMusicService()
-  if (true) {
-    getMusicLyricService(100)
+// async function getMusicUrl() {}
+// async function getCheckMusicService() {
+//   await getMusicLyricService(100)
+// }
+async function radioMusic(id: number) {
+  const { code, message } = await getCheckMusicService(id)
+  if (code === 200 && message === 'ok') {
+    const { code, data } = await getMusicUrlService(id)
+    if (code === 200 && data.length > 0) {
+      urlList.value = data?.[0].url
+      console.log(data)
+      console.log(data?.[0].url)
+    }
   } else {
+    ElMessage.error(message)
   }
-}
-async function getCheckMusicService() {
-  await getMusicLyricService(100)
 }
 
 getPlayList()
 getDynamic()
 getDetail()
-getMusicUrl()
+// getMusicUrl()
 </script>

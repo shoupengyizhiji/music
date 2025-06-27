@@ -1,10 +1,12 @@
 import type { HttpResponse } from '@/types/apis'
-import type { SongItem, PlayListItem } from '@/types/apis/song'
+import type { SongItem, PlayListItem, MusicUrlItem } from '@/types/apis/song'
 import request from '@/utils/request'
 interface SongResponse extends HttpResponse {
   songs: SongItem[]
 }
-
+interface MusicUrlResponse extends HttpResponse {
+  data: MusicUrlItem[]
+}
 export interface DynamicItem {
   code: number
   bookedCount: number
@@ -51,7 +53,7 @@ export const getDetailService = (id: number): Promise<PlayListDetail> => {
   })
 }
 //获取音乐url
-export function getMusicLyricService(id: number, br: number = 999000) {
+export function getMusicUrlService(id: number, br: number = 999000): Promise<MusicUrlResponse> {
   return request({
     url: '/song/url',
     method: 'get',
@@ -62,7 +64,7 @@ export function getMusicLyricService(id: number, br: number = 999000) {
   })
 }
 //判断歌曲是否可用
-export function getCheckMusicService(id: number, br: number = 999000) {
+export function getCheckMusicService(id: number, br: number = 999000): promises<HttpResponse> {
   return request({
     url: '/check/music',
     method: 'get',
