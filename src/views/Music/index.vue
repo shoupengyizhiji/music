@@ -85,6 +85,7 @@
           :key="item.id"
           class="border-b border-gray-100"
           @click="radioMusic(item.id)"
+          :class="{ 'text-red-500': urlId === item.id }"
         >
           <!-- @click="radioMusic(item.id)" -->
           <div class="flex justify-between py-3 mx-3">
@@ -93,8 +94,18 @@
                 <div>{{ index + 1 }}</div>
                 <div class="pl-2">
                   <div>{{ item.name }}</div>
-                  <div class="text-xs text-gray-400">{{ item.ar?.[0].name }}</div>
-                  <audio v-if="urlList" controls :src="urlList"></audio>
+                  <div
+                    class="text-xs"
+                    :class="urlId === item.id ? 'text-red-500' : ' text-gray-400'"
+                  >
+                    {{ item.ar?.[0].name }}
+                  </div>
+                  <audio
+                    v-if="urlId === item.id"
+                    ref="rulRef"
+                    :src="urlList"
+                    @ended="nextMusic"
+                  ></audio>
                 </div>
               </div>
             </div>
@@ -115,7 +126,7 @@ import {
   getCheckMusicService,
 } from '@/apis/song'
 import type { DynamicItem, PlayListItem } from '@/apis/song'
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import type { SongItem, MusicUrlItem } from '@/types/apis/song'
 // import { getMusicDetailService } from '@/apis/music'
 import { ElMessage } from 'element-plus'
@@ -138,7 +149,6 @@ const pushComment = () => {
     },
   })
 }
-
 const getPlayList = async () => {
   const id: number = Number(route.query.id)
   const { code, songs } = await getSongsService(id)
@@ -165,15 +175,29 @@ const getDetail = async () => {
 // async function getCheckMusicService() {
 //   await getMusicLyricService(100)
 // }
+const urlId = ref<number>(0)
+const rulRef = ref<HTMLAudioElement>()
+// rulRef.value?.play()
 async function radioMusic(id: number) {
   const { code, message } = await getCheckMusicService(id)
   if (code === 200 && message === 'ok') {
     const { code, data } = await getMusicUrlService(id)
-    if (code === 200 && data.length > 0) {
-      urlList.value = data?.[0].url
+    // urlId.value = id
+      if (urlId.value !== id && code === 200 && data.length > 0) {
+        urlList.value = data?.[0].url
+        urlId.value = id
+        nextTick(() => {
+          rulRef.value[0].oncanplay = () => {
+            rulRef.value[0]?.play()
+          }
+        })
+      } else {
+        rulRef.value[0]?.pause()
+      }
+
       console.log(data)
       console.log(data?.[0].url)
-    }
+    
   } else {
     ElMessage.error(message)
   }
